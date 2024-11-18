@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Light Intersection Simulation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Traffic Light Intersection</h1>
+        <div class="intersection">
+            <div class="road north-road">
+                <div class="traffic-light" id="north-light">
+                    <div class="light red"></div>
+                    <div class="light yellow"></div>
+                    <div class="light green"></div>
+                </div>
+            </div>
+            <div class="road east-road">
+                <div class="traffic-light" id="east-light">
+                    <div class="light red"></div>
+                    <div class="light yellow"></div>
+                    <div class="light green"></div>
+                </div>
+            </div>
+            <div class="road south-road">
+                <div class="traffic-light" id="south-light">
+                    <div class="light red"></div>
+                    <div class="light yellow"></div>
+                    <div class="light green"></div>
+                </div>
+            </div>
+            <div class="road west-road">
+                <div class="traffic-light" id="west-light">
+                    <div class="light red"></div>
+                    <div class="light yellow"></div>
+                    <div class="light green"></div>
+                </div>
+            </div>
+        </div>
+        <div id="status-display">
+            <p>Current Direction: <span id="current-direction">North</span></p>
+            <p>Green Light Duration: <span id="duration">0</span> seconds</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

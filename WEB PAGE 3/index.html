@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Light Intersection Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 800px;
+            width: 100%;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .intersection {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-rows: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .road {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .north-road {
+            grid-column: 2;
+        }
+        .east-road {
+            grid-column: 3;
+            grid-row: 2;
+        }
+        .west-road {
+            grid-row: 2;
+        }
+        .south-road {
+            grid-column: 2;
+            grid-row: 3;
+        }
+
+        .traffic-light {
+            width: 50px;
+            height: 150px;
+            background-color: #333;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 10px;
+        }
+
+        .light {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #444;
+            transition: background-color 0.5s;
+        }
+
+        .red {
+            background-color: #d33;
+        }
+        .yellow {
+            background-color: #e6c800;
+        }
+        .green {
+            background-color: #28a745;
+        }
+
+        .off {
+            background-color: #444;
+        }
+
+        #status-display {
+            border: solid;
+            margin-top: 250px;
+            font-size: 18px;
+            padding: 10px;
+        }
+
+        #current-direction, #duration {
+            font-weight: bold;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Traffic Light Intersection</h1>
+        <div class="intersection">
+            <div class="road north-road">
+                <div class="traffic-light" id="north-light">
+                    <div class="light red"></div>
+                    <div class="light yellow"></div>
+                    <div class="light green"></div>
+                </div>
+                <button onclick="updateVehicleCount('north')">North Traffic</button>
+            </div>
+            <div class="road east-road">
+                <div class="traffic-light" id="east-light">
+                    <div class="light red"></div>
+                    <div class="light yellow"></div>
+                    <div class="light green"></div>
+                </div>
+                <button onclick="updateVehicleCount('east')">East Traffic</button>
+            </div>
+            <div class="road south-road">
+                <div class="traffic-light" id="south-light">
+                    <div class="light red"></div>
+                    <div class="light yellow"></div>
+                    <div class="light green"></div>
+                </div>
+                <button onclick="updateVehicleCount('south')">South Traffic</button>
+            </div>
+            <div class="road west-road">
+                <div class="traffic-light" id="west-light">
+                    <div class="light red"></div>
+                    <div class="light yellow"></div>
+                    <div class="light green"></div>
+                </div>
+                <button onclick="updateVehicleCount('west')">West Traffic</button>
+            </div>
+        </div>
+        <div id="status-display">
+            <p>Current Direction: <span id="current-direction">North</span></p>
+            <p>Green Light Duration: <span id="duration">0</span> seconds</p>
+        </div>
+    </div>
+
+    <script>
+        const vehicleCounts = {
+            north: 0,
+            east: 0,
+            south: 0,
+            west: 0
+        };
+
+        const directions = ['north', 'east', 'south', 'west'];
+        let count = 0;
+
+        function updateVehicleCount(direction) {
+            let count = parseInt(prompt(`Enter vehicle count for ${capitalize(direction)} direction:`));
+            if (!isNaN(count) && count >= 0) {
+                vehicleCounts[direction] = count;
+                alert(`${capitalize(direction)} vehicle count set to ${count}`);
+            } else {
+                alert("Please enter a valid non-negative number.");
+            }
+        }
+
+        function calculateTrafficLightTiming(vehicleCount) {
+            if (vehicleCount < 30) {
+                return 30;  // 30 seconds for low density
+            } else if (vehicleCount < 60) {
+                return 60;  // 60 seconds for medium density
+            } else {
+                return 90;  // 90 seconds for high density
+            }
+        }
+
+        function updateTrafficLights(duration) {
+            let currentDirection = directions[count % 4];
+
+            directions.forEach(dir => {
+                setRedLight(dir);
+            });
+
+            setGreenLight(currentDirection);
+
+            document.getElementById('current-direction').textContent = capitalize(currentDirection);
+            document.getElementById('duration').textContent = duration;
+
+            count++;
+        }
+
+        function setRedLight(direction) {
+            document.querySelector(`#${direction}-light .red`).classList.remove('off');
+            document.querySelector(`#${direction}-light .yellow`).classList.add('off');
+            document.querySelector(`#${direction}-light .green`).classList.add('off');
+        }
+
+        function setGreenLight(direction) {
+            document.querySelector(`#${direction}-light .red`).classList.add('off');
+            document.querySelector(`#${direction}-light .yellow`).classList.add('off');
+            document.querySelector(`#${direction}-light .green`).classList.remove('off');
+        }
+
+        function capitalize(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        function trafficControlSystem() {
+            function cycleLights() {
+                let currentDirection = directions[count % 4];
+                let vehicleCount = vehicleCounts[currentDirection];
+                let duration = calculateTrafficLightTiming(vehicleCount);
+
+                updateTrafficLights(duration);
+                setTimeout(cycleLights, 5 * 1000);
+            }
+            cycleLights();
+        }
+
+        trafficControlSystem();
+    </script>
+</body>
+</html>
